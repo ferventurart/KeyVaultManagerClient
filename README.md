@@ -16,6 +16,10 @@ En desarrollo activo
 3. En el appsettings.json agrega los key AzureDefaults & KeyVault tal cual.
 4. Ejecuta el proyecto y listo!
 
+## Uso
+Levanta la aplicacion y simplemente busca con el campo de texto arriba de la tabla por el nombre del secret luego da click en el boton de copy para que el valor del secret se te copie en tu clipboard! y listo!
+
+
 ## Contribución
 ¡Te animamos a contribuir al proyecto! Si deseas contribuir, sigue estos pasos:
 
