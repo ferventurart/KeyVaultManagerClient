@@ -1,0 +1,80 @@
+﻿@page "/"
+
+@using Constants;
+@using Azure.Security.KeyVault.Secrets
+@using KeyVaultManagerClient.Data
+@inject SecretService SecretService
+@inject IJSRuntime JSRuntime
+@inject ISnackbar Snackbar
+
+<PageTitle>KeyVault Manager - Client</PageTitle>
+<MudContainer MaxWidth="MaxWidth.Medium" Fixed=true Class="mt-3">
+    <MudTable FixedHeader="true" Dense="true" Hover="true" Bordered="true" Striped="true" Items="@secrets" Square="true" Filter="new Func<SecretProperties,bool>(FilterSecret)">
+        <ToolBarContent>
+            <MudText Typo="Typo.h6">@KeyVaultName</MudText>
+            <MudSpacer />
+            <MudTextField @bind-Value="searchCriteria" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+        </ToolBarContent>
+        <HeaderContent>
+            <MudTh>Name</MudTh>
+            <MudTh>Enabled</MudTh>
+            <MudTh>Value</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Name">@context.Name</MudTd>
+            <MudTd DataLabel="Enabled"><MudSwitch ReadOnly="true" @bind-Checked="@context.Enabled" Color="Color.Success" ThumbIcon="@Icons.Material.Filled.Check" ThumbIconColor="Color.Default" /></MudTd>
+            <MudTd DataLabel="Copy Value">
+                <MudIconButton @onclick="() => CopyToClipboard(context.Name)" Icon="@Icons.Material.Filled.ContentCopy" Color="Color.Default"></MudIconButton>
+            </MudTd>
+        </RowTemplate>
+        <PagerContent>
+            <MudTablePager PageSizeOptions="new int[] { 25, 50, 100, int.MaxValue }" />
+        </PagerContent>
+    </MudTable>
+</MudContainer>
+
+
+@code {
+    private bool CopySuccess;
+
+    private string KeyVaultName = string.Empty;
+
+    private IEnumerable<SecretProperties>? secrets;
+
+    protected override async Task OnInitializedAsync()
+    {
+        KeyVaultName = SecretService.GetKeyVaultName();
+        secrets = await SecretService.GetSecretsFromCache();
+    }
+
+    private string searchCriteria = "";
+
+    private bool FilterSecret(SecretProperties element) => FilterSecrets(element, searchCriteria);
+
+    private bool FilterSecrets(SecretProperties element, string searchString)
+    {
+        if (string.IsNullOrWhiteSpace(searchString))
+            return true;
+        if (element.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        return false;
+    }
+
+    private async Task CopyToClipboard(string secretName)
+    {
+        string secretValue = await SecretService.GetSecretValue(secretName);
+
+        CopySuccess = await JSRuntime.InvokeAsync<bool>("clipboardInterop.copyToClipboard", secretValue);
+
+        Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopCenter;
+
+        if (CopySuccess)
+        {
+            Snackbar.Add("Secret copied successfully!", Severity.Info);
+        }
+        else
+        {
+            Snackbar.Add("Error copying text to clipboard.", Severity.Error);
+        }
+    }
+}

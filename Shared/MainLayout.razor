@@ -1,0 +1,19 @@
+﻿@inherits LayoutComponentBase
+
+<PageTitle>KeyVault Manager - Client</PageTitle>
+
+<MudThemeProvider />
+
+<MudLayout>
+    <MudAppBar Elevation="1">
+        <MudText Typo="Typo.h5" Class="ml-3">KeyVault - Manager</MudText>
+        <MudSpacer />
+        <MudImage Src="https://azure.microsoft.com/svghandler/key-vault/?width=42&height=42" Edge="Edge.End" />
+    </MudAppBar>
+    <MudMainContent>
+        @Body
+    </MudMainContent>
+</MudLayout>
+
+<MudDialogProvider />
+<MudSnackbarProvider />
