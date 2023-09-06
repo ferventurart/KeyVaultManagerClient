@@ -23,6 +23,6 @@ En desarrollo activo
 2. Crea una nueva rama para tu contribución: `git checkout -b mi-contribución`.
 3. Realiza tus cambios y documenta adecuadamente.
 4. Envía una solicitud de extracción (Pull Request).
-5. 
+   
 ## Licencia
 Este proyecto está bajo la Licencia MIT - consulta el archivo [LICENSE](LICENSE) para obtener más detalles.
