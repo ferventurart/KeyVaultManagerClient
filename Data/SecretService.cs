@@ -1,7 +1,6 @@
 ﻿using Azure.Security.KeyVault.Secrets;
 using KeyVaultManagerClient.Constants;
 using LazyCache;
-using Microsoft.AspNetCore.DataProtection;
 
 namespace KeyVaultManagerClient.Data;
 
